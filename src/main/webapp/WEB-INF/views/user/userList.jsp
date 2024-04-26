@@ -5,10 +5,26 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>회원목록</title>
+<title>회원 목록</title>
+<link rel="stylesheet" href="/resources/css/user.css" />
+<script src="/resources/js/user.js"></script>
 </head>
 <body>
-	<div class="userList">
+	<div class="list">
+		<h2>회원 목록</h2>
+		<form id="top_select" action="/api/user/list?page=${resultDTO.page}" method="get">
+			<select id="pageSize" name="pageSize" onchange="updateSelect()">
+				<option value="">페이지수</option>
+				<option value="10" ${requestScope.pageSize == 10 ? "selected" : "" }>10</option>
+				<option value="30" ${requestScope.pageSize == 30 ? "selected" : "" }>30</option>
+				<option value="50" ${requestScope.pageSize == 50 ? "selected" : "" }>50</option>
+			</select>
+			<select id="sort" name="sort" onchange="updateSelect()">
+				<option value="createDate" ${requestScope.sort == 'createDate' ? "selected" : "" }>가입일순</option>
+				<option value="userName" ${requestScope.sort == 'userName' ? "selected" : "" }>이름순</option>
+			</select>
+			<input type="hidden" name="page" value="${resultDTO.page}">
+		</form>
 		<table>
 			<tr>
 				<th>회원ID</th>
@@ -22,16 +38,54 @@
 			<c:if test="${not empty requestScope.userList}">
 				<c:forEach var="u" items="${requestScope.userList}">
 					<tr>
-						<td><a href="detail?id=${u.id}">${u.id}</a></td>
-						<td>${u.nickname}</td>
-						<td>${u.name}</td>
-						<td>${u.email}</td>
+						<td>${u.userId}</td>
+						<td>${u.userNick}</td>
+						<td>${u.userName}</td>
+						<td>${u.userEmail}</td>
 						<td>${u.createDate}</td>
-						<td><a href="detail?id=${u.id}">상세보기</a></td>
+						<td><c:if test="${sessionScope.loginId == u.userId}"><a href="/api/user/${u.userId}">상세보기</a></c:if></td>
 					</tr>
 				</c:forEach>
 			</c:if>
+			
+			<c:if test="${empty requestScope.userList}">
+				<tr>
+					<td colspan="6">가입 내역이 없습니다.</td>
+				</tr>
+			</c:if>
 		</table>
+		<div class="pageNation">
+			 <c:choose>
+				<c:when test="${resultDTO.start != resultDTO.page}">
+				  	<a class ="firstB" href="list?page=${resultDTO.start}&sort=${sort}&pageSize=${pageSize}">처음</a>
+  					<a class ="ltB" href="list?page=${resultDTO.page-1}&sort=${sort}&pageSize=${pageSize}">&LT;</a>
+				</c:when>
+				<c:otherwise>
+				  	<span class ="firstB">처음</span>
+				  	<span class ="ltB">&LT;</span>
+				</c:otherwise>
+			</c:choose> 	 
+			 
+			<c:forEach var="i" items="${resultDTO.pageList}">
+				<c:if test="${i==resultDTO.page}">
+					<span><strong>${i}</strong></span>&nbsp;
+				</c:if>
+				<c:if test="${i!=resultDTO.page}">
+					<a href="list?page=${i}&sort=${sort}&pageSize=${pageSize}">${i}</a>&nbsp;
+				</c:if>
+			</c:forEach>
+			 
+			<c:choose>
+				<c:when test="${resultDTO.end != resultDTO.page}">
+					<a class="gtB" href="list?page=${resultDTO.page+1}&sort=${sort}&pageSize=${pageSize}">&GT;</a>
+					<a class="lastB" href="list?page=${resultDTO.end}&sort=${sort}&pageSize=${pageSize}">마지막</a>
+				</c:when>
+				<c:otherwise>
+					<span class="gtB">&GT;</span>
+					<span class="lastB">마지막</span>
+				</c:otherwise>
+			</c:choose>
+		 </div>
 	</div>
 </body>
 </html>

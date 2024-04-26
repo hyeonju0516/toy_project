@@ -21,12 +21,17 @@ public class UserServiceImpl implements UserService{
 	private final UserRepository repository;
 
 	@Override
-	public PageResultDTO<User> selectList(PageRequestDTO requestDTO, String sort){
-		Pageable pageable = requestDTO.getPageable(Sort.by(sort).descending());
-		Page<User> result = repository.findAll(pageable);
-		
-		return new PageResultDTO<>(result);
-	};
+	public PageResultDTO<User> selectList(PageRequestDTO requestDTO, String sort) {
+	    Pageable pageable;
+	    if ("userName".equals(sort)) {
+	    	pageable = requestDTO.getPageable(Sort.by(sort).ascending());
+	    } else {
+	    	pageable = requestDTO.getPageable(Sort.by(sort).descending());
+	    }
+	    Page<User> result = repository.findAll(pageable);
+	    return new PageResultDTO<>(result);
+	}
+
 	
 	@Override
 	public User selectDetail(String id) {

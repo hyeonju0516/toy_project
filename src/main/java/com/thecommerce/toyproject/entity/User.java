@@ -18,14 +18,23 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class User {
 	@Id
-	private String id;
-	@Column(nullable=false)
-	private String password;
-	private String nickname;
-	@Column(nullable=false)
-	private String name;
-	private String phone;
-	private String email;
+	@Column(name="user_id")
+	private String userId;
+	
+	@Column(name="user_pw", nullable=false)
+	private String userPw;
+	
+	@Column(name="user_nick")
+	private String userNick;
+	
+	@Column(name="user_name", nullable=false)
+	private String userName;
+	
+	@Column(name="user_phone")
+	private String userPhone;
+	
+	@Column(name="user_email")
+	private String userEmail;
 	
 	@Column(name="create_date", length=20, nullable=false)
 	private String createDate;
