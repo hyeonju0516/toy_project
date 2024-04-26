@@ -14,7 +14,6 @@
 		<h2>회원 목록</h2>
 		<form id="top_select" action="/api/user/list?page=${resultDTO.page}" method="get">
 			<select id="pageSize" name="pageSize" onchange="updateSelect()">
-				<option value="">페이지수</option>
 				<option value="10" ${requestScope.pageSize == 10 ? "selected" : "" }>10</option>
 				<option value="30" ${requestScope.pageSize == 30 ? "selected" : "" }>30</option>
 				<option value="50" ${requestScope.pageSize == 50 ? "selected" : "" }>50</option>
@@ -23,7 +22,6 @@
 				<option value="createDate" ${requestScope.sort == 'createDate' ? "selected" : "" }>가입일순</option>
 				<option value="userName" ${requestScope.sort == 'userName' ? "selected" : "" }>이름순</option>
 			</select>
-			<input type="hidden" name="page" value="${resultDTO.page}">
 		</form>
 		<table>
 			<tr>
@@ -56,8 +54,8 @@
 		</table>
 		<div class="pageNation">
 			 <c:choose>
-				<c:when test="${resultDTO.start != resultDTO.page}">
-				  	<a class ="firstB" href="list?page=${resultDTO.start}&sort=${sort}&pageSize=${pageSize}">처음</a>
+				<c:when test="${1 != resultDTO.page}">
+				  	<a class ="firstB" href="list?page=1&sort=${sort}&pageSize=${pageSize}">처음</a>
   					<a class ="ltB" href="list?page=${resultDTO.page-1}&sort=${sort}&pageSize=${pageSize}">&LT;</a>
 				</c:when>
 				<c:otherwise>
@@ -68,17 +66,17 @@
 			 
 			<c:forEach var="i" items="${resultDTO.pageList}">
 				<c:if test="${i==resultDTO.page}">
-					<span><strong>${i}</strong></span>&nbsp;
+					<span><strong>${i}</strong></span>
 				</c:if>
 				<c:if test="${i!=resultDTO.page}">
-					<a href="list?page=${i}&sort=${sort}&pageSize=${pageSize}">${i}</a>&nbsp;
+					<a href="list?page=${i}&sort=${sort}&pageSize=${pageSize}">${i}</a>
 				</c:if>
 			</c:forEach>
 			 
 			<c:choose>
-				<c:when test="${resultDTO.end != resultDTO.page}">
+				<c:when test="${resultDTO.totalPage != resultDTO.page}">
 					<a class="gtB" href="list?page=${resultDTO.page+1}&sort=${sort}&pageSize=${pageSize}">&GT;</a>
-					<a class="lastB" href="list?page=${resultDTO.end}&sort=${sort}&pageSize=${pageSize}">마지막</a>
+					<a class="lastB" href="list?page=${resultDTO.totalPage}&sort=${sort}&pageSize=${pageSize}">마지막</a>
 				</c:when>
 				<c:otherwise>
 					<span class="gtB">&GT;</span>

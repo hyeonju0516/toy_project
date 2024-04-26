@@ -24,12 +24,9 @@ public class PageResultDTO<T> {
     private List<Integer> pageList;
 	
     public PageResultDTO(Page<T> result){
-    	
     	entityList = result.getContent(); 
         totalPage = result.getTotalPages();
         makePageList(result.getPageable());
-        
-        
     }
 
     private void makePageList(Pageable pageable){
