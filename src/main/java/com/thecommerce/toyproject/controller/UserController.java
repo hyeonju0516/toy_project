@@ -1,8 +1,5 @@
 package com.thecommerce.toyproject.controller;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -59,9 +56,7 @@ public class UserController {
 	// 회원상세
 	@GetMapping("/{userId}")
 	public String selectDetail(@PathVariable("userId") String userId, Model model, HttpServletRequest request) {
-		
 		try {
-			
 			if(userId != null || !"".equals(userId)) {
 				model.addAttribute("userDetail", service.selectDetail(userId));
 				
@@ -90,7 +85,6 @@ public class UserController {
 			   entity.getUserName() == null || entity.getUserPhone() == null) {
 				throw new Exception("전송 받은 정보가 부족합니다. => "+entity.toString());
 			}else {
-				entity.setModifyDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 				if(service.save(entity) != null) {
 					return "redirect:/api/user/"+entity.getUserId();
 				}else {
@@ -119,8 +113,6 @@ public class UserController {
 			   entity.getUserName() == null || entity.getUserPhone() == null) {
 				throw new Exception("전송 받은 정보가 부족합니다. => "+entity.toString());
 			}else {
-				entity.setUserPw(passwordEncoder.encode(entity.getUserPw()));
-				entity.setCreateDate(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
 				if(service.save(entity) != null) {
 					response.setStatus(HttpServletResponse.SC_CREATED);
 					return "/home";
@@ -166,33 +158,23 @@ public class UserController {
 	public String login(User entity, Model model, HttpSession session) {
 
 		try {
-			String pw = entity.getUserPw();
-			User user = service.selectDetail(entity.getUserId());
-
-			if (user != null && passwordEncoder.matches(pw, user.getUserPw())) {
-				session.setAttribute("loginId", entity.getUserId());
-
+			if (entity != null && service.login(entity) != null ) {
+				session.setAttribute("loginId", service.login(entity));
 				return "redirect:/home";
-
 			} else {
-				
 				model.addAttribute("message", "아이디와 비밀번호를 확인해 주세요.");
-				return "redirect:/login";
 			}
 
 		} catch (Exception e) {
 			log.info("** Login Exception => " + e.toString());
-
-			return "redirect:/login";
 		}
+		return "redirect:/login";
 	}
 	
 	// 로그아웃
 	@GetMapping(value="/logout")
 	public String logout(HttpSession session) {
-		
 		session.invalidate();
-		
 		return "redirect:/home";
 	}
 	

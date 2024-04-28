@@ -9,5 +9,6 @@ public interface UserService {
 	PageResultDTO<User> selectList(PageRequestDTO requestDTO, String sort);
 	User selectDetail(String id);
 	User save(User entity);
+	String login(User entity);
 	
 }
