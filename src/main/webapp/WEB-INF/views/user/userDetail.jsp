@@ -39,7 +39,7 @@
 		</table>
 
 		<div>
-			<div>
+			<div class="btnBox">
 				<c:if test="${sessionScope.loginId == requestScope.userDetail.userId}">
 					<a href="/api/user/${requestScope.userDetail.userId}?jCode=U">수정하기</a>
 				</c:if>

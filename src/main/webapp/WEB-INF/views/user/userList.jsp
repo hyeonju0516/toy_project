@@ -84,6 +84,9 @@
 				</c:otherwise>
 			</c:choose>
 		 </div>
+		 <div class="btnBox">
+		 	<a href="/">메인페이지</a>
+		 </div>
 	</div>
 </body>
 </html>
